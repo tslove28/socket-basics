@@ -20,8 +20,17 @@ app.use(express.static(__dirname + '/public'));
 //     res.sendFile(__dirname + '/public/index.html');
 // });
 
-io.on('connection', function() {
+io.on('connection', function(socket) {
     console.log((x = x + 1) + ' a user connected');
+
+    socket.on('message', function(message) {
+        console.log('Message received: ' + message.text);
+        socket.broadcast.emit('message', message);
+    });
+
+    socket.emit('message', {
+        'text': 'Welcome to the chat application'
+    });
 });
 
 http.listen(PORT, function() {
